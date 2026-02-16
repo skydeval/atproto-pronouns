@@ -1,0 +1,64 @@
+{
+  "lexicon": 1,
+  "id": "app.nearhorizon.actor.pronouns",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "A user's pronoun preferences, stored as an ordered array of pronoun sets.",
+      "key": "literal:self",
+      "record": {
+        "type": "object",
+        "required": ["sets", "createdAt"],
+        "properties": {
+          "sets": {
+            "type": "array",
+            "description": "Ordered array of pronoun sets. First entry is primary. Maximum 10.",
+            "items": {
+              "type": "ref",
+              "ref": "#pronounSet"
+            },
+            "maxLength": 10
+          },
+          "displayMode": {
+            "type": "string",
+            "description": "Author's preferred display mode for their pronouns. If absent, clients MUST treat as 'all'.",
+            "knownValues": [
+              "all",
+              "firstOnly"
+            ],
+            "default": "all"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Set once on initial creation. Never modified on subsequent edits."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Set on every edit after initial creation. Absent on first write."
+          }
+        }
+      }
+    },
+
+    "pronounSet": {
+      "type": "object",
+      "description": "A single pronoun set, stored as an open-ended array of forms exactly as the user entered them.",
+      "required": ["forms"],
+      "properties": {
+        "forms": {
+          "type": "array",
+          "description": "Pronoun forms in the order the user provided them. Conventionally forms[0] is subject and forms[1] is object, but clients MUST NOT assume a fixed number of forms. Display by joining with '/'.",
+          "items": {
+            "type": "string",
+            "maxGraphemes": 24,
+            "maxLength": 64
+          },
+          "minLength": 1,
+          "maxLength": 12
+        }
+      }
+    }
+  }
+}
