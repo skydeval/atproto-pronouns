@@ -71,7 +71,7 @@ Two modes:
 - **`all`** (default) — every set, joined with a separator: `she/her · fae/faer/faerself · star/stars/starself`
 - **`firstOnly`** — just the primary set: `she/her`
 
-If `displayMode` is absent, treat it as `"all"`.
+If `displayMode` is absent or unrecognized, treat it as `"all"`.
 
 ### Writing pronouns
 
@@ -94,13 +94,41 @@ await agent.com.atproto.repo.putRecord({
 })
 ```
 
-To clear pronouns without deleting the record, write an empty `sets` array. To remove entirely, use `deleteRecord`.
+To clear pronouns without deleting the record, write an empty `sets` array (preserving the original `createdAt`). To remove entirely, use `deleteRecord`.
+
+### Editing pronouns
+
+When updating an existing record, preserve the original `createdAt` and set `updatedAt`:
+
+```typescript
+// First, fetch the existing record to get the original createdAt
+const existing = await agent.com.atproto.repo.getRecord({
+  repo: userDid,
+  collection: 'app.nearhorizon.actor.pronouns',
+  rkey: 'self',
+})
+
+await agent.com.atproto.repo.putRecord({
+  repo: userDid,
+  collection: 'app.nearhorizon.actor.pronouns',
+  rkey: 'self',
+  record: {
+    $type: 'app.nearhorizon.actor.pronouns',
+    sets: [
+      { forms: ['they', 'them'] },
+    ],
+    displayMode: 'all',
+    createdAt: existing.data.value.createdAt, // preserve original
+    updatedAt: new Date().toISOString(),       // set on every edit
+  },
+})
+```
 
 ### What you need to adopt this
 
 1. The lexicon definition ([`lexicons/app/nearhorizon/actor/pronouns.json`](lexicons/app/nearhorizon/actor/pronouns.json))
 2. Join each set's `forms` array with `/` for display
-3. Respect the author's `displayMode` field, defaulting to `"all"` when absent
+3. Respect the author's `displayMode` field, defaulting to `"all"` when absent or unrecognized
 4. Never normalize, reorder, merge, expand, or otherwise alter the user's forms during storage
 
 ## Specification
@@ -117,9 +145,9 @@ Each entry in `sets` is a `pronounSet` object containing a single `forms` array.
 
 **No normalization:** Clients MUST NOT normalize, reorder, merge, expand, or otherwise alter the user's pronoun forms during storage. What people type in should show up as they typed them.
 
-**`displayMode` default:** If `displayMode` is absent from the record, clients MUST treat it as `"all"`. Do not rely on the lexicon `"default"` field being auto-applied by tooling — always implement the fallback explicitly.
+**`displayMode` default:** If `displayMode` is absent from the record **or contains an unrecognized value**, clients MUST treat it as `"all"`. Always implement this fallback explicitly — this ensures old clients continue working when new display modes are added.
 
-**Empty sets:** `sets` may legally be an empty array. If empty, clients SHOULD render nothing. This allows users to clear their pronouns without deleting the record (preserving `createdAt` and the record's existence).
+**Empty sets:** `sets` may legally be an empty array. If empty, clients SHOULD render nothing. This allows users to clear their pronouns without deleting the record (preserving `createdAt` and the record's existence). When clearing, clients MUST preserve the original `createdAt` and set `updatedAt` — do not construct a fresh record with a new `createdAt`.
 
 **Timestamps:** `createdAt` is set once on initial creation and MUST NOT change on subsequent edits. `updatedAt` is set on every edit after initial creation and is absent on first write. When editing, clients MUST preserve the original `createdAt` and set `updatedAt` to the current time.
 

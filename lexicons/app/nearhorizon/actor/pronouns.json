@@ -21,12 +21,11 @@
           },
           "displayMode": {
             "type": "string",
-            "description": "Author's preferred display mode for their pronouns. If absent, clients MUST treat as 'all'.",
+            "description": "Author's preferred display mode for their pronouns. If absent or unrecognized, clients MUST treat as 'all'.",
             "knownValues": [
               "all",
               "firstOnly"
-            ],
-            "default": "all"
+            ]
           },
           "createdAt": {
             "type": "string",
