@@ -175,4 +175,6 @@ Apache 2.0
 
 ### Implementations
 
-*None yet — be the first!*
+- [Speakeasy Social](https://spkeasy.social) — cooperative, privacy-focused social platform
+
+Using this lexicon in your project? Open an issue or PR to get listed.
