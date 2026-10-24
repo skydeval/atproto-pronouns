@@ -10,19 +10,19 @@ Pronouns as an ATProto record on the user's PDS. Not a labeler, not a freeform s
 
 **Profile + feed:**
 
-<img src="screenshots/profile_feed.png" width="600" />
+<img src="docs/images/profile_feed.png" width="600" />
 
 **Post detail:**
 
-<img src="screenshots/focused_post.png" width="600" />
+<img src="docs/images/focused_post.png" width="600" />
 
 **Hover card:**
 
-<img src="screenshots/hover_card.png" width="400" />
+<img src="docs/images/hover_card.png" width="400" />
 
 **Edit profile:**
 
-<img src="screenshots/edit_profile.png" width="600" />
+<img src="docs/images/edit_profile.png" width="600" />
 
 ## Why this exists
 
