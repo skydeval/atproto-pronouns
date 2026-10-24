@@ -1,7 +1,7 @@
 # ATProto Pronouns Lexicon
 
 **Namespace:** `app.nearhorizon.actor.pronouns`
-**Version:** 1.0
+**Version:** 1.1
 **License:** Apache 2.0
 
 Pronouns as an ATProto record on the user's PDS. Not a labeler, not a single
