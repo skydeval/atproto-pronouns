@@ -52,7 +52,7 @@
           "items": {
             "type": "string",
             "maxGraphemes": 24,
-            "maxLength": 64
+            "maxLength": 240
           },
           "minLength": 1,
           "maxLength": 12
